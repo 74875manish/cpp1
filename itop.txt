@@ -1,0 +1,187 @@
+
+infix to prefix
+package day9;
+
+
+import java.util.Scanner;
+
+public class InfixToPrefix {
+	
+	
+
+	    static char[] stack = new char[10];
+	    static int tos = -1;
+
+	    static void createStack(int maxSize) {
+	        for (int i = 0; i < maxSize; i++) {
+	            stack[i] = '\0';
+	        }
+	        tos = -1;
+	    }
+
+	    static void push(char e) {
+	        stack[++tos] = e;
+	    }
+
+	    static char pop() {
+	        return stack[tos--];
+	    }
+
+	    static boolean isEmpty() {
+	        return tos == -1;
+	    }
+
+	    static int precedence(char ch) {
+	        switch (ch) {
+	            case '+':
+	            case '-':
+	                return 1;
+	            case '*':
+	            case '/':
+	            case '%':
+	                return 2;
+	            default:
+	                return 0;
+	        }
+	    }
+
+	    public static void main(String[] args) {
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.print("Enter infix expression: ");
+	        String infix = scanner.nextLine();
+
+	        char[] prefix = new char[10];
+	        int p = 0;
+
+	        createStack(infix.length());
+
+	        for (int i = infix.length() - 1; i >= 0; i--) {
+	            char c = infix.charAt(i);
+	            switch (c) {
+	                case ')':
+	                    push(c);
+	                    break;
+	                case '(':
+	                    while (!isEmpty() && stack[tos] != ')') {
+	                        prefix[p++] = pop();
+	                    }
+	                    pop(); // Remove ')' from stack
+	                    break;
+	                case '+':
+	                case '-':
+	                case '*':
+	                case '/':
+	                    while (!isEmpty() && precedence(c) <= precedence(stack[tos])) {
+	                        prefix[p++] = pop();
+	                    }
+	                    push(c);
+	                    break;
+	                default:
+	                    prefix[p++] = c;
+	                    break;
+	            }
+	        }
+
+	        while (!isEmpty()) {
+	            prefix[p++] = pop();
+	        }
+
+	        // Reverse the prefix array
+	        for (int i = 0; i < p / 2; i++) {
+	            char temp = prefix[i];
+	            prefix[i] = prefix[p-i-1];
+	            prefix[p-i-1] = temp;
+	        }
+
+	        System.out.println("Prefix expression: " + new String(prefix));
+	    }
+	}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------infix to postfix
+
+package Stack_Data;
+import java.util.Scanner;
+
+class intopost {
+
+    static char[] stack = new char[100];
+    static int tos = -1;
+
+    static void createStack(int maxSize) {
+        for (int i = 0; i < maxSize; i++) {
+            stack[i] = '\0';
+        }
+        tos = -1;
+    }
+
+    static void push(char e) {
+        stack[++tos] = e;
+    }
+
+    static char pop() {
+        return stack[tos--];
+    }
+
+    static boolean isEmpty() {
+        return tos == -1;
+    }
+
+    static int precedence(char ch) {
+        switch (ch) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+            case '%':
+                return 2;
+            default:
+                return 0;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter infix expression: ");
+        String infix = scanner.nextLine();
+
+        char[] postfix = new char[100];
+        int p = 0;
+
+        createStack(infix.length());
+
+        for (int i = 0; i < infix.length(); i++) {
+            char c = infix.charAt(i);
+            switch (c) {
+                case '(':
+                    push(c);
+                    break;
+                case ')':
+                    while (!isEmpty() && stack[tos] != '(') {
+                        postfix[p++] = pop();
+                    }
+                    pop(); // Remove '(' from stack
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                    while (!isEmpty() && precedence(c) <= precedence(stack[tos])) {
+                        postfix[p++] = pop();
+                    }
+                    push(c);
+                    break;
+                default:
+                    postfix[p++] = c;
+                    break;
+            }
+        }
+
+        while (!isEmpty()) {
+            postfix[p++] = pop();
+        }
+
+        System.out.println("Postfix expression: " + new String(postfix));
+    }
+}
